@@ -10,12 +10,7 @@ use App\Domain\TodoRepository;
 use Exception;
 use React\MySQL\ConnectionInterface;
 use React\MySQL\QueryResult;
-use React\Promise\Deferred;
-use React\Promise\Promise;
 use React\Promise\PromiseInterface;
-use React\Promise\PromisorInterface;
-use function React\Promise\reject;
-use function React\Promise\resolve;
 
 class MysqlTodoRepository implements TodoRepository
 {
@@ -30,13 +25,15 @@ class MysqlTodoRepository implements TodoRepository
     public function save(Todo $todo): PromiseInterface
     {
         $query = <<<SQL
-INSERT INTO todos (todo_id, message, created_at) VALUES (?, ?, ?);
+REPLACE INTO todos (todo_id, message, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?);
 SQL;
 
         return $this->connection->query($query, [
             $todo->id()->value(),
             $todo->message()->value(),
-            $todo->existSince()->format('Y-m-d H:i:s')
+            $todo->status()->value(),
+            $todo->existSince()->format('Y-m-d H:i:s'),
+            $todo->doneAt() ? $todo->doneAt()->format('Y-m-d H:i:s') : null,
         ])->then(
             function (QueryResult $command) {
                 echo $command->insertId;
@@ -55,6 +52,34 @@ SQL;
 
         return $this->connection->query($query, [
             $todoId->value(),
-        ]);
+        ])->then(function (QueryResult $queryResult) {
+            $todo = $queryResult->resultRows[0];
+
+            return Todo::fromRawData(
+                $todo['todo_id'],
+                $todo['message'],
+                $todo['status'],
+                new \DateTimeImmutable($todo['created_at']),
+                empty($todo['updated_at']) ? null : new \DateTimeImmutable($todo['updated_at'])
+            );
+        });
+    }
+
+    public function findAll(): PromiseInterface
+    {
+        $query = <<<SQL
+SELECT * FROM todos ORDER BY created_at DESC;
+SQL;
+
+        return $this->connection->query($query);
+    }
+
+    public function remove(TodoId $todoId): PromiseInterface
+    {
+        $query = <<<SQL
+DELETE FROM todos WHERE todo_id = ?;
+SQL;
+
+        return $this->connection->query($query, [$todoId->value()]);
     }
 }

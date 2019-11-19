@@ -8,3 +8,15 @@ add_todo:
   methods: [ 'POST' ]
   # the controller value has the format 'controller_class::method_name'
   controller: App\Application\Http\AddTodo
+
+done_todo:
+  path: /todos/{todoId}/done
+  methods: [ 'POST' ]
+  # the controller value has the format 'controller_class::method_name'
+  controller: App\Application\Http\DoneTodo
+
+remove_todo:
+  path: /todos/{todoId}/remove
+  methods: [ 'POST' ]
+  # the controller value has the format 'controller_class::method_name'
+  controller: App\Application\Http\RemoveTodo

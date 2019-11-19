@@ -9,13 +9,23 @@
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    {% block styles %}
+    {% endblock %}
     <script src="public/index.js"></script>
 </head>
-<body>
-<div class="container bg-gray">
+<body class="bg-gray">
+<div class="hero bg-primary">
+    <div class="hero-body p-centered">
+        <h1>Drift PHP - Todos App</h1>
+    </div>
+</div>
+<div class="divider"></div>
+<div class="container grid-lg">
     {% block content %}
         <h1>Drift PHP</h1>
     {% endblock %}
 </div>
+{% block scripts %}
+{% endblock %}
 </body>
 </html>

@@ -32,6 +32,20 @@ services:
         class: App\Application\Http\AddTodo
         arguments:
             - '@App\Domain\TodoRepository'
+            - '@App\Application\Http\Request\AddTodoValidator'
+
+    App\Application\Http\Request\AddTodoValidator:
+        class: App\Application\Http\Request\AddTodoValidator
+
+    App\Application\Http\DoneTodo:
+        class: App\Application\Http\DoneTodo
+        arguments:
+            - '@App\Domain\TodoRepository'
+
+    App\Application\Http\RemoveTodo:
+        class: App\Application\Http\RemoveTodo
+        arguments:
+            - '@App\Domain\TodoRepository'
 
     App\Domain\TodoRepository:
         class: App\Infrastructure\MysqlTodoRepository

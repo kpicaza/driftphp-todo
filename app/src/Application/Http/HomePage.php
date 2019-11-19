@@ -8,6 +8,7 @@ use App\Domain\Model\TodoId;
 use App\Domain\TodoRepository;
 use React\MySQL\QueryResult;
 use React\Promise\Deferred;
+use React\Promise\PromiseInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
@@ -24,11 +25,11 @@ class HomePage
         $this->repository = $repository;
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): PromiseInterface
     {
         return $this->repository
-            ->get(TodoId::fromString('SomeUuid'))
-            ->then(function (QueryResult $queryResult) use (&$todos) {
+            ->findAll()
+            ->then(function (QueryResult $queryResult) {
                 return new Response($this->templateEngine->render('index.html.twig', [
                     'docs' => 'https://driftphp.io',
                     'message' => 'Welcome to Drift PHP Framework Starter',
