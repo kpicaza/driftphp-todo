@@ -2,11 +2,27 @@ version: '3'
 
 volumes:
   mysql_data:
+  redis:
 
 networks:
   drift-net:
 
 services:
+  drif_server:
+    build: ./php-cli/
+    ports:
+      - 8100:8100
+    links:
+      - mysql_server
+    depends_on:
+      - mysql_server
+    volumes:
+      - ./app:/opt/app
+    working_dir: /opt/app
+    command: ["bin/server", "run", "0.0.0.0:8100", "--static-folder=public"]
+    networks:
+      - drift-net
+
   mysql_server:
     build: ./mysql/
     volumes:
@@ -21,3 +37,10 @@ services:
       MYSQL_PASSWORD: devel
     networks:
       - drift-net
+  redis:
+    image: redis:latest
+    volumes:
+      - redis:/var/lib/redis
+    networks:
+      - drift-net
+

@@ -56,4 +56,4 @@ services:
         factory: App\Container\ReactMysqlConnectionFactory::createConnection
         arguments:
             - '@service_container'
-            - 'root:secret@0.0.0.0:3306/drift_todo'
+            - 'root:secret@mysql_server:3306/drift_todo'
