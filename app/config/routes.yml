@@ -1,0 +1,10 @@
+home_page:
+  path: /
+  # the controller value has the format 'controller_class::method_name'
+  controller: App\Application\Http\HomePage
+
+add_todo:
+  path: /todos/add
+  methods: [ 'POST' ]
+  # the controller value has the format 'controller_class::method_name'
+  controller: App\Application\Http\AddTodo

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Drift PHP - Todos App</h1>
+
+    <ul>
+        {% for todo in todos %}
+            <li>{{ todo.todo_id }} - {{ todo.message }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

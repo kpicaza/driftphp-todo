@@ -1,0 +1,59 @@
+parameters:
+    kernel.secret: nsdjkfhdsupoifjñksd
+
+framework:
+    form: false
+    assets: false
+    session: false
+    translator: false
+    php_errors:
+        log: false
+
+# config/services.yaml
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    react_client:
+        synthetic: true
+
+    react_redis_factory:
+        synthetic: true
+
+    App\Application\Http\HomePage:
+        class: App\Application\Http\HomePage
+        arguments:
+            - '@Twig\Environment'
+            - '@App\Domain\TodoRepository'
+
+    App\Application\Http\AddTodo:
+        class: App\Application\Http\AddTodo
+        arguments:
+            - '@App\Domain\TodoRepository'
+
+    App\Domain\TodoRepository:
+        class: App\Infrastructure\MysqlTodoRepository
+        arguments:
+            - '@React\Mysql\ConnectionInterface'
+
+    ## Twig config
+    Twig\Loader\FilesystemLoader:
+        class: Twig\Loader\FilesystemLoader
+        arguments:
+            - 'templates'
+
+    Twig\Environment:
+        class: Twig\Environment
+        arguments:
+            - '@Twig\Loader\FilesystemLoader'
+            - [ cache: 'var/twig' ]
+
+    ## React mysql
+    React\Mysql\ConnectionInterface:
+        class:   React\MySQL\Io\LazyConnection
+        factory: App\Container\ReactMysqlConnectionFactory::createConnection
+        arguments:
+            - '@service_container'
+            - 'root:secret@0.0.0.0:3306/drift_todo'
