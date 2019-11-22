@@ -12,4 +12,7 @@ RUN apt-get update && apt-get install -y netcat
 
 COPY ./conf.d/redis.ini $PHP_INI_DIR/conf.d/redis.ini
 
-CMD ["php"]
+ADD ./wait-for-mysql.sh /opt/wait-for-mysql.sh
+RUN chmod +x /opt/wait-for-mysql.sh
+
+CMD ["/opt/wait-for-mysql.sh", "php"]
