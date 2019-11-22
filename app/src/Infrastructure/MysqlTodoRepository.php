@@ -7,14 +7,14 @@ namespace App\Infrastructure;
 use App\Domain\Model\Todo;
 use App\Domain\Model\TodoId;
 use App\Domain\TodoRepository;
-use Exception;
+use DateTimeImmutable;
 use React\MySQL\ConnectionInterface;
 use React\MySQL\QueryResult;
 use React\Promise\PromiseInterface;
 
 class MysqlTodoRepository implements TodoRepository
 {
-    /** @var ConnectionInterface * */
+    /** @var ConnectionInterface **/
     private $connection;
 
     public function __construct(ConnectionInterface $connection)
@@ -34,14 +34,7 @@ SQL;
             $todo->status()->value(),
             $todo->existSince()->format('Y-m-d H:i:s'),
             $todo->doneAt() ? $todo->doneAt()->format('Y-m-d H:i:s') : null,
-        ])->then(
-            function (QueryResult $command) {
-                echo $command->insertId;
-            },
-            function (Exception $error) {
-                echo 'Error: ' . $error->getMessage() . PHP_EOL;
-            }
-        );
+        ]);
     }
 
     public function get(TodoId $todoId): PromiseInterface
@@ -59,8 +52,8 @@ SQL;
                 $todo['todo_id'],
                 $todo['message'],
                 $todo['status'],
-                new \DateTimeImmutable($todo['created_at']),
-                empty($todo['updated_at']) ? null : new \DateTimeImmutable($todo['updated_at'])
+                new DateTimeImmutable($todo['created_at']),
+                empty($todo['updated_at']) ? null : new DateTimeImmutable($todo['updated_at'])
             );
         });
     }

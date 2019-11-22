@@ -24,7 +24,7 @@ class DoneTodo
     public function __invoke(Request $request, string $todoId): PromiseInterface
     {
         return $this->repository->get(TodoId::fromString($todoId))
-            ->then(function (Todo $todo) {
+            ->then(static function (Todo $todo) {
                 $todo->done();
                 return $todo;
             })

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Http;
 
-use App\Domain\Model\Todo;
 use App\Domain\Model\TodoId;
 use App\Domain\TodoRepository;
 use React\Promise\PromiseInterface;
@@ -13,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RemoveTodo
 {
-    /** @var TodoRepository * */
+    /** @var TodoRepository **/
     private $repository;
 
     public function __construct(TodoRepository $repository)

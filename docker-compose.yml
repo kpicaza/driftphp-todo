@@ -19,7 +19,7 @@ services:
     volumes:
       - ./app:/opt/app
     working_dir: /opt/app
-    command: ["bin/server", "run", "0.0.0.0:8100", "--static-folder=public"]
+    command: ["vendor/bin/server", "run", "0.0.0.0:8100", "--static-folder=public"]
     networks:
       - drift-net
 
